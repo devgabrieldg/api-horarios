@@ -39,6 +39,30 @@ def confirmar_horario(dados: Confirmacao):
     return {"status": "confirmado", "horario": dados.horario}
 
 
+class Reagendamento(BaseModel):
+    horario_atual: str
+    novo_horario: str
+
+
+@app.post("/reagendar")
+def reagendar_horario(dados: Reagendamento):
+    if dados.horario_atual not in horarios_confirmados:
+        raise HTTPException(status_code=404, detail="Horário atual não encontrado")
+    if dados.novo_horario not in horarios_disponiveis:
+        raise HTTPException(status_code=409, detail="Novo horário indisponível")
+
+    # Libera o horário antigo e confirma o novo
+    horarios_confirmados.remove(dados.horario_atual)
+    horarios_disponiveis.append(dados.horario_atual)
+    horarios_disponiveis.remove(dados.novo_horario)
+    horarios_confirmados.append(dados.novo_horario)
+    return {
+        "status": "reagendado",
+        "horario_anterior": dados.horario_atual,
+        "novo_horario": dados.novo_horario,
+    }
+
+
 @app.get("/confirmados")
 def listar_confirmados():
     return horarios_confirmados
