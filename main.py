@@ -4,9 +4,9 @@ app = FastAPI(title="API de Horários Disponíveis (teste)")
 
 # Horários fixos, apenas para teste
 HORARIOS_DISPONIVEIS = [
-    {"data": "2026-11-17", "horario": "09:00"},
-    {"data": "2026-11-17", "horario": "14:30"},
-    {"data": "2026-11-18", "horario": "10:00"},
+    "17/11/2026 às 09:00",
+    "17/11/2026 às 14:30",
+    "18/11/2026 às 10:00",
 ]
 
 
@@ -17,4 +17,4 @@ def health():
 
 @app.get("/horarios")
 def listar_horarios():
-    return {"horarios_disponiveis": HORARIOS_DISPONIVEIS}
+    return HORARIOS_DISPONIVEIS
